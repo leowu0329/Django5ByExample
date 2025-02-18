@@ -1,12 +1,24 @@
+import dj_database_url
 from pathlib import Path
+from environ import Env
+
+env=Env()
+Env.read_env()
+
+ENVIRONMENT = env('ENVIRONMENT',default="production")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-94#*^sp0gmz5na3l1e17nylkii9b*xu!p95&6e+nir%)81v8x*"
+SECRET_KEY = env('SECRET_KEY')
 
-DEBUG = True
+if ENVIRONMENT == 'development':
+    DEBUG = True
+else:
+    DEBUG = False
 
 ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = ['https://djangodeploytorender.onrender.com']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -14,6 +26,8 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    'cloudinary_storage',
+    'cloudinary',
     "django.contrib.staticfiles",
     'allauth',
     'allauth.account',
@@ -33,6 +47,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = "src.urls"
@@ -55,12 +70,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "src.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if ENVIRONMENT == 'development':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': dj_database_url.parse(env('DATABASE_URL'))
+    }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -83,16 +104,34 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [ BASE_DIR / 'static' ]
+STATIC_ROOT=BASE_DIR /'staticfiles'
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticCloudinaryStorage'
+
+
+MEDIA_URL = 'media/'
+
+if ENVIRONMENT == 'development':
+    MEDIA_ROOT = BASE_DIR / 'media' 
+else:
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    CLOUDINARY_STORAGE={
+        'CLOUDINARY_URL': env('CLOUDINARY_URL')
+    }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+SITE_ID = 1
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'ryowu0329@gmail.com'
-EMAIL_HOST_PASSWORD = 'ltmkhwqcgwoorryy'
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_HOST_USER=env('EMAIL_ADDRESS')
+EMAIL_HOST_PASSWORD=env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+DEFAULT_FROM_EMAIL=f"Django App Name {env('EMAIL_ADDRESS')}"
+ACCOUNT_EMAIL_SUBJECT_PREFIX=''
 
 ACCOUNT_EMAIL_REQUIRED = True  # 要求用戶提供電子郵件地址
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # 強制驗證電子郵件
