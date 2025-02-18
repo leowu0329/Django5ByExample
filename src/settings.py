@@ -16,9 +16,9 @@ if ENVIRONMENT == 'development':
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*','https://django5byexample.onrender.com']
 
-CSRF_TRUSTED_ORIGINS = ['https://djangodeploytorender.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://django5byexample.onrender.com']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
