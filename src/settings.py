@@ -133,6 +133,23 @@ EMAIL_USE_TLS=True
 DEFAULT_FROM_EMAIL=f"Django App Name {env('EMAIL_ADDRESS')}"
 ACCOUNT_EMAIL_SUBJECT_PREFIX=''
 
-ACCOUNT_EMAIL_REQUIRED = True  # 要求用戶提供電子郵件地址
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # 強制驗證電子郵件
+# 電子郵件驗證設定
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
+
+# 驗證後重定向設定
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False  # 驗證成功後不自動登入
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/accounts/login/"  # 驗證後跳轉到登入頁
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/accounts/login/"      # 驗證後跳轉到登入頁
+
+# 登入相關設定
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+LOGIN_REDIRECT_URL = '/'  # 登入成功後的重定向URL
+
+# 新增 rate limits 設定
+ACCOUNT_RATE_LIMITS = {
+    # 5次失敗後，等待300秒（5分鐘）
+    'login_failed': '5/300m',
+}
