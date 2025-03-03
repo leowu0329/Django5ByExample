@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h1>歡迎來到首頁</h1>
+    <p>您已成功登入系統。</p>
+
+    <div class="mt-4">
+      <form method="post" action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">登出</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

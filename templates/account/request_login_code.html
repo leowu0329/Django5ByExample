@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  請求登入驗證碼
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <div class="text-center mb-4">
+              <i class="fas fa-envelope-circle-check fa-3x text-primary mb-3"></i>
+              <h2>請求登入驗證碼</h2>
+            </div>
+
+            <div class="alert alert-info mb-4">
+              <i class="fas fa-info-circle me-2"></i>
+              我們將發送一組特殊的登入驗證碼至您的信箱，您可以使用該驗證碼進行免密碼登入。
+            </div>
+
+            {% if messages %}
+              <div class="messages mb-4">
+                {% for message in messages %}
+                  <div class="alert {% if message.tags %}
+                      
+                      alert-{{ message.tags }}
+                    {% endif %} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'account_request_login_code' %}">
+              {% csrf_token %}
+              {{ redirect_field }}
+
+              <div class="mb-4">
+                <label for="email" class="form-label">電子郵件</label>
+                <input type="email" name="email" id="email" class="form-control" required placeholder="請輸入您的電子郵件地址" autocomplete="email" />
+              </div>
+
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">發送驗證碼</button>
+              </div>
+            </form>
+
+            <div class="text-center mt-4">
+              <a href="{% url 'account_login' %}" class="text-decoration-none">
+                <i class="fas fa-arrow-left me-1"></i>
+                返回其他登入方式
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .card {
+      border-radius: 10px;
+      border: none;
+    }
+    
+    .btn-primary {
+      padding: 0.8rem 1rem;
+    }
+    
+    .form-control {
+      padding: 0.8rem 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .card {
+        border-radius: 0;
+        box-shadow: none !important;
+      }
+    
+      .container {
+        max-width: 100%;
+        padding: 0;
+      }
+    
+      .card-body {
+        padding: 2rem 1rem;
+      }
+    }
+  </style>
+{% endblock %}

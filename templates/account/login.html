@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  登入
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <div class="text-center mb-4">
+              <i class="fas fa-user-circle fa-3x text-primary mb-3"></i>
+              <h2>登入</h2>
+            </div>
+
+            {% if messages %}
+              <div class="messages mb-4">
+                {% for message in messages %}
+                  <div class="alert {% if message.tags %}
+                      
+                      
+                      
+                      
+                      
+                      alert-{{ message.tags }}
+                    {% endif %} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'account_login' %}">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="login" class="form-label">電子郵件或用戶名稱</label>
+                <input type="text" name="login" id="login" class="form-control" required placeholder="請輸入電子郵件或用戶名稱" autocomplete="username" value="ryowu0329@gmail.com" />
+              </div>
+
+              <div class="mb-4">
+                <label for="password" class="form-label">密碼</label>
+                <input type="password" name="password" id="password" class="form-control" required placeholder="請輸入密碼" autocomplete="current-password" value="12345678" />
+                <div class="form-text text-end">
+                  <a href="{% url 'account_reset_password' %}" class="text-decoration-none">忘記密碼？</a>
+                </div>
+              </div>
+
+              {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+              {% endif %}
+
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">登入</button>
+              </div>
+            </form>
+          </div>
+          <div class="card-footer bg-light text-center py-3">
+            還沒有帳號？ <a href="{% url 'account_signup' %}" class="text-decoration-none">立即註冊</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .card {
+      border-radius: 10px;
+      border: none;
+    }
+    
+    .card-footer {
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    
+    .btn-primary {
+      padding: 0.8rem 1rem;
+    }
+    
+    .form-control {
+      padding: 0.8rem 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .card {
+        border-radius: 0;
+        box-shadow: none !important;
+      }
+    
+      .container {
+        max-width: 100%;
+        padding: 0;
+      }
+    
+      .card-body {
+        padding: 2rem 1rem;
+      }
+    }
+  </style>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container py-4">
+    <div class="row">
+      <div class="col-md-3 mb-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title mb-3">帳號管理</h5>
+            <div class="list-group list-group-flush">
+              <a href="{% url 'account_email' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'account_email' %}active{% endif %}"><i class="fas fa-envelope me-2"></i>電子郵件</a>
+              <a href="{% url 'account_change_password' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'account_change_password' %}active{% endif %}"><i class="fas fa-key me-2"></i>更改密碼</a>
+              <a href="{% url 'account_logout' %}" class="list-group-item list-group-item-action text-danger"><i class="fas fa-sign-out-alt me-2"></i>登出</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            {% block manage_content %}
+
+            {% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .card {
+      border-radius: 10px;
+      border: none;
+    }
+    
+    .list-group-item {
+      border: none;
+      padding: 0.8rem 1rem;
+      margin-bottom: 0.2rem;
+      border-radius: 6px !important;
+    }
+    
+    .list-group-item.active {
+      background-color: var(--bs-primary);
+    }
+    
+    @media (max-width: 768px) {
+      .card {
+        border-radius: 0;
+        box-shadow: none !important;
+      }
+    
+      .container {
+        max-width: 100%;
+        padding: 0;
+      }
+    
+      .card-body {
+        padding: 1.5rem 1rem;
+      }
+    }
+  </style>
+{% endblock %}

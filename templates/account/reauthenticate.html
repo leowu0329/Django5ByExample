@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  確認身份
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <div class="text-center mb-4">
+              <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+              <h2>確認身份</h2>
+            </div>
+
+            <div class="alert alert-info mb-4">
+              <i class="fas fa-info-circle me-2"></i>
+              為了保護您的帳號安全，請輸入您的密碼以確認身份。
+            </div>
+
+            <form method="post" action="{% url 'account_reauthenticate' %}">
+              {% csrf_token %}
+              {{ redirect_field }}
+
+              <div class="mb-4">
+                <label for="password" class="form-label">密碼</label>
+                <input type="password" name="password" id="password" class="form-control" required placeholder="請輸入您的密碼" autocomplete="current-password" />
+              </div>
+
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">確認</button>
+              </div>
+            </form>
+
+            {% if reauthentication_alternatives %}
+              <hr class="my-4" />
+              <h5 class="mb-3">其他驗證方式</h5>
+              <div class="d-grid gap-2">
+                {% for alt in reauthentication_alternatives %}
+                  <a href="{{ alt.url }}" class="btn btn-outline-primary">{{ alt.description }}</a>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .card {
+      border-radius: 10px;
+      border: none;
+    }
+    
+    .btn {
+      padding: 0.8rem 1rem;
+    }
+    
+    .form-control {
+      padding: 0.8rem 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .card {
+        border-radius: 0;
+        box-shadow: none !important;
+      }
+    
+      .container {
+        max-width: 100%;
+        padding: 0;
+      }
+    
+      .card-body {
+        padding: 2rem 1rem;
+      }
+    }
+  </style>
+{% endblock %}

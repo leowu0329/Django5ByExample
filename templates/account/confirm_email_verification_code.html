@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}驗證電子郵件{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-shield-halved fa-3x text-primary mb-3"></i>
+                        <h2>驗證電子郵件</h2>
+                    </div>
+
+                    <div class="alert alert-info mb-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        我們已發送一個6位數的驗證碼至 <strong>{{ email }}</strong>
+                        <hr>
+                        <ul class="mb-0 ps-3">
+                            <li>驗證碼有效期為15分鐘</li>
+                            <li>如果沒有收到郵件，請檢查垃圾郵件資料夾</li>
+                        </ul>
+                    </div>
+
+                    {% if messages %}
+                    <div class="messages mb-4">
+                        {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="post" action="{% url 'account_confirm_email' %}">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="code" class="form-label">驗證碼</label>
+                            <input type="text" name="code" id="code" class="form-control text-center" 
+                                   required placeholder="請輸入6位數驗證碼" 
+                                   maxlength="6" pattern="\d{6}"
+                                   inputmode="numeric" style="letter-spacing: 0.5em; font-family: monospace;">
+                        </div>
+
+                        {{ redirect_field }}
+
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-primary">確認驗證碼</button>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <form method="post" action="{% url 'resend_verification' %}" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="email" value="{{ email }}">
+                                <button type="submit" class="btn btn-link text-decoration-none p-0">
+                                    <i class="fas fa-paper-plane me-1"></i>重新發送驗證碼
+                                </button>
+                            </form>
+
+                            {% if cancel_url %}
+                                <a href="{{ cancel_url }}" class="btn btn-link text-decoration-none text-muted">取消</a>
+                            {% else %}
+                                <form id="logout-from-stage" method="post" action="{% url 'account_logout' %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{% url 'account_login' %}">
+                                    <button type="submit" class="btn btn-link text-decoration-none text-muted p-0">取消</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        border-radius: 10px;
+        border: none;
+    }
+    
+    .btn-primary {
+        padding: 0.8rem 1rem;
+    }
+    
+    .form-control {
+        padding: 0.8rem 1rem;
+        font-size: 1.2rem;
+    }
+    
+    @media (max-width: 768px) {
+        .card {
+            border-radius: 0;
+            box-shadow: none !important;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 0;
+        }
+        
+        .card-body {
+            padding: 2rem 1rem;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  驗證郵件已發送
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <div class="text-center mb-4">
+              <i class="fas fa-paper-plane fa-3x text-primary mb-3"></i>
+              <h2>驗證郵件已發送</h2>
+            </div>
+
+            <div class="alert alert-info mb-4">
+              <i class="fas fa-info-circle me-2"></i>
+              我們已發送驗證郵件至您的信箱 <strong>{{ email }}</strong>。 請點擊郵件中的連結以完成註冊流程。<hr />
+              <p class="mb-2">如果您沒有收到驗證郵件：</p>
+              <ul class="mb-0 ps-3">
+                <li>請檢查垃圾郵件資料夾或促銷郵件資料夾</li>
+                <li>確認您輸入的電子郵件地址是否正確</li>
+                <li>等待幾分鐘，郵件可能稍有延遲</li>
+                <li>如果仍然沒收到，可以點擊下方按鈕重新發送</li>
+              </ul>
+            </div>
+
+            {% if messages %}
+              <div class="messages mb-4">
+                {% for message in messages %}
+                  <div class="alert {% if message.tags %}
+                      
+                      alert-{{ message.tags }}
+                    {% endif %} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <div class="d-grid gap-2 mb-3">
+              <form method="post" action="{% url 'resend_verification' %}">
+                {% csrf_token %}
+                <input type="hidden" name="email" value="{{ email }}" />
+                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-paper-plane me-2"></i>重新發送驗證郵件</button>
+              </form>
+            </div>
+
+            <div class="text-center">
+              <a href="{% url 'account_email' %}" class="btn btn-link text-decoration-none"><i class="fas fa-envelope me-1"></i>更改電子郵件地址</a>
+              <span class="mx-2 text-muted">|</span>
+              <form method="post" action="{% url 'account_logout' %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link text-decoration-none text-muted"><i class="fas fa-sign-out-alt me-1"></i>取消註冊</button>
+              </form>
+            </div>
+
+            <div class="mt-4 text-center">
+              <small class="text-muted">如果您持續遇到問題，請聯繫我們的客服人員協助。</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .card {
+      border-radius: 10px;
+      border: none;
+    }
+    
+    .btn-primary {
+      padding: 0.8rem 1rem;
+    }
+    
+    .btn-link {
+      padding: 0.5rem 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .card {
+        border-radius: 0;
+        box-shadow: none !important;
+      }
+    
+      .container {
+        max-width: 100%;
+        padding: 0;
+      }
+    
+      .card-body {
+        padding: 2rem 1rem;
+      }
+    }
+  </style>
+{% endblock %}

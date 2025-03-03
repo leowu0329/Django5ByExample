@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  註冊
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <div class="text-center mb-4">
+              <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
+              <h2>註冊</h2>
+            </div>
+
+            {% if messages %}
+              <div class="messages mb-4">
+                {% for message in messages %}
+                  <div class="alert {% if message.tags %}
+                      
+                      
+                      
+                      
+                      
+                      
+                      alert-{{ message.tags }}
+                    {% endif %} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'account_signup' %}">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="username" class="form-label">用戶名稱</label>
+                <input type="text" name="username" id="username" class="form-control" required placeholder="請輸入用戶名稱" autocomplete="username" value="ryowu" />
+                <div class="form-text">只能使用英文字母、數字和 @/./+/-/_</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="email" class="form-label">電子郵件</label>
+                <input type="email" name="email" id="email" class="form-control" required placeholder="請輸入電子郵件" autocomplete="email" value="ryowu0329@gmail.com" />
+              </div>
+
+              <div class="mb-3">
+                <label for="password1" class="form-label">密碼</label>
+                <input type="password" name="password1" id="password1" class="form-control" required placeholder="請輸入密碼" autocomplete="new-password" value="12345678" />
+                <div class="form-text">密碼長度至少需要8個字元</div>
+              </div>
+
+              <div class="mb-4">
+                <label for="password2" class="form-label">確認密碼</label>
+                <input type="password" name="password2" id="password2" class="form-control" required placeholder="請再次輸入密碼" autocomplete="new-password" value="12345678" />
+              </div>
+
+              {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+              {% endif %}
+
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">註冊</button>
+              </div>
+            </form>
+          </div>
+          <div class="card-footer bg-light text-center py-3">
+            已經有帳號了？ <a href="{% url 'account_login' %}" class="text-decoration-none">立即登入</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .card {
+      border-radius: 10px;
+      border: none;
+    }
+    
+    .card-footer {
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    
+    .btn-primary {
+      padding: 0.8rem 1rem;
+    }
+    
+    .form-control {
+      padding: 0.8rem 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .card {
+        border-radius: 0;
+        box-shadow: none !important;
+      }
+    
+      .container {
+        max-width: 100%;
+        padding: 0;
+      }
+    
+      .card-body {
+        padding: 2rem 1rem;
+      }
+    }
+  </style>
+{% endblock %}

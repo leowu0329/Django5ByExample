@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  需要驗證電子郵件
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <div class="text-center mb-4">
+              <i class="fas fa-envelope-circle-check fa-3x text-warning mb-3"></i>
+              <h2>需要驗證電子郵件</h2>
+            </div>
+
+            <div class="alert alert-warning mb-4">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              此功能需要先完成電子郵件驗證才能使用。
+            </div>
+
+            {% if messages %}
+              <div class="messages mb-4">
+                {% for message in messages %}
+                  <div class="alert {% if message.tags %}
+                      
+                      alert-{{ message.tags }}
+                    {% endif %} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <div class="mb-4">
+              <h5 class="mb-3">為什麼需要驗證？</h5>
+              <p>為了確保您的帳號安全，我們需要驗證您的電子郵件地址。這可以：</p>
+              <ul class="mb-4">
+                <li>防止他人冒用您的身份</li>
+                <li>確保您可以收到重要通知</li>
+                <li>在忘記密碼時協助您找回帳號</li>
+              </ul>
+
+              <h5 class="mb-3">沒收到驗證郵件？</h5>
+              <p>如果您沒有收到驗證郵件，請：</p>
+              <ul class="mb-4">
+                <li>檢查垃圾郵件或促銷郵件資料夾</li>
+                <li>確認您的電子郵件地址是否正確</li>
+                <li>等待幾分鐘，郵件可能稍有延遲</li>
+                <li>點擊下方按鈕重新發送驗證郵件</li>
+              </ul>
+
+              <p class="mb-4">
+                <strong>注意：</strong>
+                如果目前的電子郵件有問題，您可以
+                <a href="{% url 'account_email' %}" class="text-decoration-none">更改電子郵件地址</a>。
+              </p>
+            </div>
+
+            <div class="d-grid gap-2 mb-3">
+              <form method="post" action="{% url 'resend_verification' %}">
+                {% csrf_token %}
+                <input type="hidden" name="email" value="{{ email }}" />
+                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-2"></i>重新發送驗證郵件</button>
+              </form>
+            </div>
+
+            <div class="text-center">
+              <small class="text-muted">如果您持續遇到問題，請聯繫我們的客服人員協助。</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .card {
+      border-radius: 10px;
+      border: none;
+    }
+    
+    .btn-primary {
+      padding: 0.8rem 1rem;
+    }
+    
+    ul {
+      padding-left: 1.2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .card {
+        border-radius: 0;
+        box-shadow: none !important;
+      }
+    
+      .container {
+        max-width: 100%;
+        padding: 0;
+      }
+    
+      .card-body {
+        padding: 2rem 1rem;
+      }
+    }
+  </style>
+{% endblock %}
